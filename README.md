@@ -3,6 +3,7 @@
 [![Since](https://img.shields.io/badge/since-2025.03.09-A9F5F2.svg?&edge_flat=false)](https://github.com/JAVACAFE-STUDY/2025-langchain-rag)
 
 ⭐️ [스터디 기록](https://github.com/JAVACAFE-STUDY/2025-langchain-rag/issues?q=is%3Aissue)
+<br />
 ⭐️ [예제 코드](https://github.com/Kane0002/Langchain-RAG)
 
 <div align="center">

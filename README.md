@@ -76,6 +76,8 @@
 | 10주차 | 5/27 | 딥다이빙 및 개인실습   | 온라인   |
 | 발표회 |  6/14  |                  | 오프라인/필참(16-18시 예정) |
 
+<br />
+
 ## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Robot.png" alt="Robot" width="25" height="25" /> 출석 현황 
 
 |          | 조연주 | 김민지 | 이예빈 | 최영권 | 김규리 | 서동우 | 변현정 |

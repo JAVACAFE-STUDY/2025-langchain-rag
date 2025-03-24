@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "es2022", // 최소 ES2022 이상으로 설정
+    "module": "NodeNext", // ESNext 모듈 시스템 사용
+    "moduleResolution": "nodenext", // Node.js 스타일 모듈 해석
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": "./dist"
+  }
+}

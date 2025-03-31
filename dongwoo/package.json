@@ -2,14 +2,21 @@
 	"type": "module",
 	"dependencies": {
 		"@langchain/anthropic": "^0.3.15",
+		"@langchain/community": "^0.3.38",
 		"@langchain/core": "^0.3.42",
 		"@langchain/openai": "^0.4.5",
+		"@langchain/textsplitters": "^0.1.0",
+		"d3-dsv": "2",
 		"dayjs": "^1.11.13",
 		"dotenv": "^16.4.7",
 		"langchain": "^0.3.19",
+		"mammoth": "^1.9.0",
+		"officeparser": "^5.1.1",
+		"pdf-parse": "^1.1.1",
+		"puppeteer": "^24.4.0",
 		"zod": "^3.24.2"
 	},
-	"packageManager": "pnpm@10.6.5",
+	"packageManager": "pnpm@10.7.0",
 	"devDependencies": {
 		"@types/node": "^22.13.11",
 		"tsx": "^4.19.3",

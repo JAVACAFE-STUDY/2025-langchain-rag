@@ -1,8 +1,10 @@
+import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
+import { Document } from "@langchain/core/documents";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import 'dotenv/config'
 
-async function createSemanticChunks(text: string): Promise<string[]> {
+async function createSemanticChunks(docs: Document[]): Promise<string[]> {
     // OpenAI 임베딩 초기화
     const embeddings = new OpenAIEmbeddings();
 
@@ -12,11 +14,11 @@ async function createSemanticChunks(text: string): Promise<string[]> {
         chunkOverlap: 128, // 청크 간 겹치는 부분
     });
 
-    const splitTexts = await textSplitter.splitText(text);
+    const splitTexts = await textSplitter.splitDocuments(docs);
 
     // 각 문장의 임베딩 생성
     const embeddingsList = await Promise.all(
-        splitTexts.map(async (chunk) => await embeddings.embedQuery(chunk))
+        splitTexts.map(async (chunk) => await embeddings.embedQuery(chunk.pageContent))
     );
 
     // 코사인 유사도를 계산하여 의미론적 청크 생성 (예: 임계값 기반)
@@ -51,10 +53,13 @@ function calculateCosineSimilarity(vecA: number[], vecB: number[]): number {
   return dotProduct / (magnitudeA * magnitudeB);
 }
 
+
 // 테스트 실행
 (async () => {
-    const text = "This is a sample text. It contains multiple sentences about different topics.";
-    const chunks = await createSemanticChunks(text);
+    const loader = new PDFLoader("/Users/user/Downloads/2024_연감.pdf");
+    const docs = await loader.load();
+    
+    const chunks = await createSemanticChunks(docs);
     console.log(chunks);
 })();
 

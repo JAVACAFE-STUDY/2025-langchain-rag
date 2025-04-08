@@ -1,3 +1,6 @@
+/**
+ * 사용자의 질문을 재가공하여 검색 품질을 향상
+ */
 import { Chroma } from "@langchain/community/vectorstores/chroma";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";

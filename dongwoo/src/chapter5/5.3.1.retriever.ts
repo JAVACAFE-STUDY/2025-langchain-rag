@@ -30,6 +30,7 @@ const client = await Chroma.fromDocuments(changedText, new OpenAIEmbeddings({
 
 
 const retriever = client.asRetriever({
+    // searchType: 'similarity',
     // searchType: 'mmr',
     k: 3,
     // searchKwargs: {
@@ -102,4 +103,16 @@ const result2 = await client.similaritySearchWithScore('국회의원의 의무')
 
 console.log(result2[0][0].pageContent);
 console.log(result2[0][1]);
+
+
+if (client.maxMarginalRelevanceSearch) {
+    const result3 = await client.maxMarginalRelevanceSearch('국회의원의 의무', {
+        k: 3,
+        fetchK: 10,
+    }, undefined);
+
+    console.log(result3[0].pageContent);
+    console.log(result3[0].pageContent);
+}
+
 

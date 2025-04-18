@@ -10,7 +10,7 @@ const model = new ChatOpenAI({
 
 const outputParser = new StringOutputParser();
 
-// LECEL 체인 생성
+// LECEL 체인 생성 prompt | model | outputParser
 const chain = prompt.pipe(model).pipe(outputParser);
 
 // 체인을 실행

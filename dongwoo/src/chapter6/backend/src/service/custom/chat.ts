@@ -21,6 +21,10 @@ import { BaseChatMessageHistory } from "@langchain/core/chat_history";
 import { RunnableWithMessageHistory } from "@langchain/core/runnables";
 
 import 'dotenv/config'
+import { BaseMessage } from '@langchain/core/messages';
+import { Document } from '@langchain/core/documents';
+
+console.log('Conversational RAG chain created');
 
 const loader = new PDFLoader("/Users/user/Downloads/대한민국헌법(헌법)(제00010호)(19880225).pdf");
 const pages = await loader.load();
@@ -51,12 +55,6 @@ const vectorStore = await Chroma.fromDocuments(docs, new OpenAIEmbeddings({
 const llm = new ChatOpenAI({
     model: 'gpt-4o-mini',
 });
-
-const prompt = await hub.pull('rlm/rag-prompt');
-
-function formatDocs(docs: any[]) {
-    return docs.map(doc => `${doc.pageContent}`).join('\n\n');
-}
 
 const retriever = vectorStore.asRetriever();
 
@@ -118,13 +116,37 @@ const conversationalRagChain = new RunnableWithMessageHistory({
     inputMessagesKey: 'input',
     outputMessagesKey: 'answer',
     historyMessagesKey: 'chat_history',
-});
+});    
 
-console.log('Conversational RAG chain created');
+export async function addFile(file: Blob) {
+    const loader = new PDFLoader(file);
+    const pages = await loader.load();
+
+    const splitter = new RecursiveCharacterTextSplitter({
+        chunkSize: 1000,
+        chunkOverlap: 0,
+    });
+    const _docs = await splitter.splitDocuments(pages);
+    const docs = _docs.map(doc => ({
+        ...doc,
+        metadata: {source: doc.metadata.source, page: doc.metadata.loc.paggeNumber}
+    }));
+
+    await vectorStore.addDocuments(docs);
+    console.log('Added documents to vector store:', docs);
+}
 
 export async function chat(input: string, sessionId: string) {
     console.log('input:', input);
     console.log('sessionId:', sessionId);
+
+    if (!conversationalRagChain) {
+        return {
+            context: [],
+            answer: 'Conversational RAG chain is not initialized'
+        };
+    }
+
     const result = await conversationalRagChain.invoke(
         {
             "input": input

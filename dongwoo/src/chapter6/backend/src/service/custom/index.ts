@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import {chat} from './chat.ts';
+import {chat, addFile} from './chat.ts';
 
 // import { ChatOpenAI } from "@langchain/openai";
 // import { HumanMessage, SystemMessage } from "@langchain/core/messages";
@@ -20,7 +20,6 @@ import {chat} from './chat.ts';
 
 export class Custom {
     public static async chat(body: Request['body'], res: Response, req: Request) {
-        // Text messages are stored inside request body using the Deep Chat JSON format:
         // https://deepchat.dev/docs/connect
         // @ts-ignore
         const result = await chat(body.messages?.map(message => message.text)?.join('\n') || '', 'test');
@@ -59,15 +58,21 @@ export class Custom {
         // Files are stored inside a form using Deep Chat request FormData format:
         // https://deepchat.dev/docs/connect
         if (req.files as Express.Multer.File[]) {
-        console.log('Files:');
-        console.log(req.files);
+            const files = req.files as Express.Multer.File[];
+
+            for await (const file of files) {
+                const blob = new Blob([file.buffer], {type: file.mimetype});
+                await addFile(blob);
+            }
+
+            // await (addFile(req.files[0]))
         }
         // When sending text along with files, it is stored inside the request body using the Deep Chat JSON format:
         // https://deepchat.dev/docs/connect
         if (Object.keys(req.body).length > 0) {
-        console.log('Text messages:');
-        // message objects are stored as strings and they will need to be parsed (JSON.parse) before processing
-        console.log(req.body);
+            console.log('Text messages:');
+            // message objects are stored as strings and they will need to be parsed (JSON.parse) before processing
+            console.log(req.body);
         }
         // Sends response back to Deep Chat using the Response format:
         // https://deepchat.dev/docs/connect/#Response

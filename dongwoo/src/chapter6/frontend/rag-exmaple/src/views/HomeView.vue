@@ -11,8 +11,14 @@
 <template>
   <h1>RAG Eaxmple</h1>
   <deep-chat
+    :introMessage="{text: '안녕하세요? 무엇을 도와드릴까요?'}"
     :connect="{
       url: 'http://localhost:8080/chat',
+    }"
+    :mixedFiles="{
+      connect: {
+        url: 'http://localhost:8080/files',
+      }
     }"
   />
 </template>

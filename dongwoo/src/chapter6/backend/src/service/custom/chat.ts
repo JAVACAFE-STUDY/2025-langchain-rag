@@ -9,16 +9,20 @@ import {OpenAIEmbeddings} from '@langchain/openai';
 // 5단계 벡터 스토어 선정
 import { Chroma } from "@langchain/community/vectorstores/chroma";
 // 6단계 Retriever 설정(Chroma DB에 있는 기능 사용)
-import * as hub from  'langchain/hub';
+import * as hub from "langchain/hub/node";
 
 import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
 import { createHistoryAwareRetriever } from "langchain/chains/history_aware_retriever";
 import { createRetrievalChain } from "langchain/chains/retrieval";
 import { ChatPromptTemplate, MessagesPlaceholder } from '@langchain/core/prompts';
+import { RunnableSequence } from "@langchain/core/runnables";
 
 import { InMemoryChatMessageHistory } from "@langchain/core/chat_history";
 import { BaseChatMessageHistory } from "@langchain/core/chat_history";
 import { RunnableWithMessageHistory } from "@langchain/core/runnables";
+
+import { AgentExecutor, createToolCallingAgent } from "langchain/agents";
+import { TavilySearch } from "@langchain/tavily";
 
 import 'dotenv/config'
 import { BaseMessage } from '@langchain/core/messages';
@@ -28,6 +32,19 @@ console.log('Conversational RAG chain created');
 
 const loader = new PDFLoader("/Users/user/Downloads/대한민국헌법(헌법)(제00010호)(19880225).pdf");
 const pages = await loader.load();
+
+const tool = new TavilySearch({
+    maxResults: 5,
+    topic: "general",
+    // includeAnswer: false,
+    // includeRawContent: false,
+    // includeImages: false,
+    // includeImageDescriptions: false,
+    // searchDepth: "basic",
+    // timeRange: "day",
+    // includeDomains: [],
+    // excludeDomains: [],
+  });
 
 // PDF 파일을 1000자 청크로 분리
 const splitter = new RecursiveCharacterTextSplitter({
@@ -62,7 +79,9 @@ const contextualizeQSystemPrompt = `
     Given a chat history and the lastest user question 
     which might reference context in the chat history, formulate a standalone question 
     which can be understood without the chat history. Do NOT the question,
-    just reformulate it if needed and otherwise return it as is.`;
+    just reformulate it if needed and otherwise return it as is.
+    Just tell me what's in PDF files and tell me if it's not there.
+`;
 
 const contextualizeQprompt = ChatPromptTemplate.fromMessages([
     ["system", contextualizeQSystemPrompt],
@@ -81,6 +100,8 @@ const qaSystemPrompt = `
     Use the following prices of retreeved context to answer the question.
     If you don't know the answer, just say that you don't know.
     Use three sentences maximum and keep the answer concise.
+    Just tell me what's in this PDF and tell me if it's not there.
+    Always add an emoji at the end of your sentences.
 
 
     {context}
@@ -116,7 +137,22 @@ const conversationalRagChain = new RunnableWithMessageHistory({
     inputMessagesKey: 'input',
     outputMessagesKey: 'answer',
     historyMessagesKey: 'chat_history',
-});    
+});
+
+// 프롬프트 불러오기
+const prompt = await hub.pull<ChatPromptTemplate>("hwchase17/openai-tools-agent:c1867281", {
+    includeModel: true
+});
+
+// 사용할 툴 정의
+const tools = [tool];
+
+const agent = await createToolCallingAgent({ llm, tools, prompt });
+
+console.log('prompt:', prompt);
+
+// AgentExecutor 생성
+const agentExecutor = new AgentExecutor({ agent, tools, verbose: true });
 
 export async function addFile(file: Blob) {
     const loader = new PDFLoader(file);
@@ -140,12 +176,12 @@ export async function chat(input: string, sessionId: string) {
     console.log('input:', input);
     console.log('sessionId:', sessionId);
 
-    if (!conversationalRagChain) {
-        return {
-            context: [],
-            answer: 'Conversational RAG chain is not initialized'
-        };
-    }
+    // if (!conversationalRagChain) {
+    //     return {
+    //         context: [],
+    //         answer: 'Conversational RAG chain is not initialized'
+    //     };
+    // }
 
     const result = await conversationalRagChain.invoke(
         {
@@ -155,6 +191,8 @@ export async function chat(input: string, sessionId: string) {
             configurable: {"sessionId": sessionId},
         }
     );
+
+    console.log('result:', result);
     
     return result;
 };

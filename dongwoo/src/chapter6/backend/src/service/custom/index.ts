@@ -1,5 +1,6 @@
 import {Request, Response} from 'express';
 import {chat, addFile} from './chat.ts';
+import {chat as travilyChat} from './travilyAiChat.ts';
 
 // import { ChatOpenAI } from "@langchain/openai";
 // import { HumanMessage, SystemMessage } from "@langchain/core/messages";
@@ -23,6 +24,7 @@ export class Custom {
         // https://deepchat.dev/docs/connect
         // @ts-ignore
         const result = await chat(body.messages?.map(message => message.text)?.join('\n') || '', 'test');
+        // const result = await travilyChat(body.messages?.map(message => message.text)?.join('\n') || '', 'test');
         // Sends response back to Deep Chat using the Response format:
         // https://deepchat.dev/docs/connect/#Response
         res.json({text: result.answer});

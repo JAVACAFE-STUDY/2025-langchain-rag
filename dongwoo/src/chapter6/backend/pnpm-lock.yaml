@@ -20,6 +20,9 @@ importers:
       '@langchain/openai':
         specifier: ^0.4.5
         version: 0.4.9(@langchain/core@0.3.45(openai@4.95.1(ws@8.18.1)(zod@3.24.3)))(ws@8.18.1)
+      '@langchain/tavily':
+        specifier: ^0.1.1
+        version: 0.1.1(@langchain/core@0.3.45(openai@4.95.1(ws@8.18.1)(zod@3.24.3)))
       '@langchain/textsplitters':
         specifier: ^0.1.0
         version: 0.1.0(@langchain/core@0.3.45(openai@4.95.1(ws@8.18.1)(zod@3.24.3)))
@@ -848,6 +851,12 @@ packages:
     peerDependencies:
       '@langchain/core': '>=0.3.39 <0.4.0'
 
+  '@langchain/tavily@0.1.1':
+    resolution: {integrity: sha512-nvg/gJkt9F8xOlMDoP8YR22BdUz9IjsHFYp3LjCsjFq2SMlKicIWDP9M8Z4Pv0Zd9zHYk4v9Ljr3TZfCj39LRA==, tarball: https://artifactory.navercorp.com:443/artifactory/api/npm/npm-naver/@langchain/tavily/-/tavily-0.1.1.tgz}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@langchain/core': '>=0.3.39 <0.4.0'
+
   '@langchain/textsplitters@0.1.0':
     resolution: {integrity: sha512-djI4uw9rlkAb5iMhtLED+xJebDdAG935AdP4eRTB02R7OB/act55Bj9wsskhZsvuyQRpO4O1wQOp85s6T6GWmw==}
     engines: {node: '>=18'}
@@ -1167,7 +1176,7 @@ packages:
     resolution: {integrity: sha512-3xhRnjJPkULekpSzgtoNYYcTWgEZkp4myc+Saevii5JPnHNvHMRlBSHDbs7Bh1iPPoVTERHEZXyhyLbMEsExsA==}
 
   '@types/express-session@1.18.1':
-    resolution: {integrity: sha512-S6TkD/lljxDlQ2u/4A70luD8/ZxZcrU5pQwI1rVXCiaVIywoFgbA+PIUNDjPhQpPdK0dGleLtYc/y7XWBfclBg==, tarball: https://artifactory.navercorp.com:443/artifactory/api/npm/npm-naver/@types/express-session/-/express-session-1.18.1.tgz}
+    resolution: {integrity: sha512-S6TkD/lljxDlQ2u/4A70luD8/ZxZcrU5pQwI1rVXCiaVIywoFgbA+PIUNDjPhQpPdK0dGleLtYc/y7XWBfclBg==}
 
   '@types/express@5.0.1':
     resolution: {integrity: sha512-UZUw8vjpWFXuDnjFTh7/5c2TWDlQqeXHi6hcN7F2XSVT5P+WmUnnbFS3KA6Jnc6IsEqI2qCVu2bK0R0J4A8ZQQ==}
@@ -3601,6 +3610,11 @@ snapshots:
       - encoding
       - ws
 
+  '@langchain/tavily@0.1.1(@langchain/core@0.3.45(openai@4.95.1(ws@8.18.1)(zod@3.24.3)))':
+    dependencies:
+      '@langchain/core': 0.3.45(openai@4.95.1(ws@8.18.1)(zod@3.24.3))
+      zod: 3.24.3
+
   '@langchain/textsplitters@0.1.0(@langchain/core@0.3.45(openai@4.95.1(ws@8.18.1)(zod@3.24.3)))':
     dependencies:
       '@langchain/core': 0.3.45(openai@4.95.1(ws@8.18.1)(zod@3.24.3))
@@ -4879,7 +4893,7 @@ snapshots:
       isstream: 0.1.2
       jsonwebtoken: 9.0.2
       mime-types: 2.1.35
-      retry-axios: 2.6.0(axios@1.8.4)
+      retry-axios: 2.6.0(axios@1.8.4(debug@4.4.0))
       tough-cookie: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -5521,7 +5535,7 @@ snapshots:
       path-parse: 1.0.7
       supports-preserve-symlinks-flag: 1.0.0
 
-  retry-axios@2.6.0(axios@1.8.4):
+  retry-axios@2.6.0(axios@1.8.4(debug@4.4.0)):
     dependencies:
       axios: 1.8.4(debug@4.4.0)
 
